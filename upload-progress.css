@@ -1,15 +1,26 @@
-#upload-progress-container {
-    margin-top: 10px;
+#upload-progress-wrapper {
+    width: 100%;
+    background-color: #f3f3f3;
+    border: 1px solid #ccc;
+    position: relative;
+    margin: 20px 0;
+    height: 30px;
 }
 
 #upload-progress-bar {
-    width: 0;
-    height: 20px;
+    width: 0%;
+    height: 100%;
     background-color: #4caf50;
-    transition: width 0.5s;
+    transition: width 0.4s ease;
 }
 
-#upload-progress-text {
-    margin-top: 5px;
+#upload-progress-percent {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 14px;
+    line-height: 30px;
+    color: #fff;
+    font-weight: bold;
 }
