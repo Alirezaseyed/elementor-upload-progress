@@ -1,40 +1,38 @@
-jQuery(document).ready(function($) {
-    $('form').on('change', 'input[type="file"]', function(e) {
-        var fileInput = $(this);
-        var files = fileInput[0].files;
+jQuery(document).ready(function ($) {
+    $('#file-upload').on('change', function () {
+        var files = this.files;
         var formData = new FormData();
 
-        $.each(files, function(i, file) {
-            formData.append('file-' + i, file);
+        $.each(files, function (key, file) {
+            formData.append('file[]', file); // آپلود چندین فایل
         });
 
         $.ajax({
-            url: '/wp-admin/admin-ajax.php', // آدرس پیش‌فرض AJAX وردپرس
+            url: ajaxurl + '?action=handle_upload',
             type: 'POST',
             data: formData,
-            processData: false,
             contentType: false,
-            xhr: function() {
+            processData: false,
+            xhr: function () {
                 var xhr = new window.XMLHttpRequest();
-
-                xhr.upload.addEventListener('progress', function(e) {
+                xhr.upload.addEventListener('progress', function (e) {
                     if (e.lengthComputable) {
-                        var percentComplete = e.loaded / e.total;
-                        percentComplete = parseInt(percentComplete * 100);
-
-                        $('#upload-progress-bar').width(percentComplete + '%');
-                        $('#upload-progress-text').text(percentComplete + '%');
-
-                        if (percentComplete === 100) {
-                            $('#upload-progress-text').text('Upload complete');
-                        }
+                        var percent = Math.round((e.loaded / e.total) * 100);
+                        $('#upload-progress-bar').css('width', percent + '%');
+                        $('#upload-progress-percent').text(percent + '%'); // نمایش درصد
                     }
-                }, false);
-
+                });
                 return xhr;
             },
-            success: function(response) {
-                console.log('File uploaded successfully');
+            success: function (response) {
+                if (response.success) {
+                    alert(response.data); // پیام موفقیت آمیز
+                } else {
+                    alert(response.data); // پیام خطا
+                }
+            },
+            error: function () {
+                alert('خطا در آپلود.');
             }
         });
     });
